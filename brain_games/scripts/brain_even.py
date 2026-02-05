@@ -3,6 +3,7 @@ import random
 import prompt
 
 from brain_games.cli import welcome_user
+from brain_games.common import EvenGame
 
 
 def even_game(name):
@@ -26,7 +27,8 @@ def even_game(name):
 def main():
     print('Welcome to the Brain Games!')
     name = welcome_user()
-    even_game(name)
+    game = EvenGame(name)
+    game.play()
 
 
 if __name__ == "__main__":
