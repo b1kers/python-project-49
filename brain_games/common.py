@@ -1,14 +1,20 @@
 import random
 from abc import ABC, abstractmethod
+from math import gcd
 
 import prompt
 
+from .cli import welcome_user
+
 
 class BaseGame(ABC):
+    """
+    Abstract base class, there shall be intro in child classes
+    """
 
-    def __init__(self, name, intro):
-        self.name = name
-        self.intro = intro
+    def __init__(self):
+        self.name = welcome_user()
+        self.intro = self.__doc__.strip()
 
     @abstractmethod
     def get_correct(self, riddle):
@@ -37,9 +43,12 @@ class BaseGame(ABC):
 
 
 class EvenGame(BaseGame):
+    """
+    Answer "yes" if the number is even, otherwise answer "no".
+    """
 
-    def __init__(self, name, intro='Answer "yes" if the number is even, otherwise answer "no".'):
-        super().__init__(name, intro)
+    def __init__(self):
+        super().__init__()
     
     def get_riddle(self):
         return random.randint(0, 100)
@@ -49,9 +58,12 @@ class EvenGame(BaseGame):
     
 
 class CalcGame(BaseGame):
+    """
+    What is the result of the expression?
+    """
 
-    def __init__(self, name, intro='What is the result of the expression?'):
-        super().__init__(name, intro)
+    def __init__(self):
+        super().__init__()
     
     def get_riddle(self):
         a = random.randint(0, 100)
@@ -61,3 +73,20 @@ class CalcGame(BaseGame):
     
     def get_correct(self, riddle):
         return str(eval(riddle))
+    
+
+class GcdGame(BaseGame):
+    """
+    Find the greatest common divisor of given numbers.
+    """
+
+    def __init__(self):
+        super().__init__()
+    
+    def get_riddle(self):
+        a = random.randint(0, 100)
+        b = random.randint(0, 100)
+        return f'{a} {b}'
+    
+    def get_correct(self, riddle):
+        return str(gcd(*[int(x) for x in riddle.split()]))

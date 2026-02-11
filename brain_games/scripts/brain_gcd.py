@@ -1,8 +1,8 @@
-from brain_games.common import EvenGame
+from brain_games.common import GcdGame
 
 
 def main():
-    game = EvenGame()
+    game = GcdGame()
     game.play()
 
 
