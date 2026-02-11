@@ -15,10 +15,10 @@ class BaseGame(ABC):
     def __init__(self):
         self.name = welcome_user()
         self.intro = self.__doc__.strip()
+        self.correct = None
 
-    @abstractmethod
     def get_correct(self, riddle):
-        pass
+        return self.correct
 
     @abstractmethod
     def get_riddle(self):
@@ -51,11 +51,10 @@ class EvenGame(BaseGame):
         super().__init__()
     
     def get_riddle(self):
-        return random.randint(0, 100)
-    
-    def get_correct(self, riddle):
-        return 'yes' if riddle % 2 == 0 else 'no' 
-    
+        riddle = random.randint(0, 100)
+        self.correct = 'yes' if riddle % 2 == 0 else 'no'
+        return riddle
+
 
 class CalcGame(BaseGame):
     """
@@ -69,10 +68,9 @@ class CalcGame(BaseGame):
         a = random.randint(0, 100)
         b = random.randint(0, 100)
         op = random.choice(['+', '-', '*'])
-        return f'{a} {op} {b}'
-    
-    def get_correct(self, riddle):
-        return str(eval(riddle))
+        riddle = f'{a} {op} {b}'
+        self.correct = str(eval(riddle))
+        return riddle
     
 
 class GcdGame(BaseGame):
@@ -86,7 +84,32 @@ class GcdGame(BaseGame):
     def get_riddle(self):
         a = random.randint(0, 100)
         b = random.randint(0, 100)
+        self.correct = f'{gcd(a, b)}'
         return f'{a} {b}'
     
     def get_correct(self, riddle):
-        return str(gcd(*[int(x) for x in riddle.split()]))
+        return self.correct
+    
+
+class ProgGame(BaseGame):
+    """
+    What number is missing in the progression?
+    """
+
+    def __init__(self):
+        super().__init__()
+    
+    def get_riddle(self):
+        start = random.randint(0, 20)
+        step = random.randint(1, 10)
+        prog_list = list()
+        length = random.randint(5, 10)
+        missing_idx = random.choice(range(length))
+        for index in range(length):
+            current = start + index * step
+            if index == missing_idx:
+                self.correct = str(current)
+                prog_list.append('..')
+            else:
+                prog_list.append(current)
+        return ' '.join(str(x) for x in prog_list)
