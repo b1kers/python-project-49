@@ -1,10 +1,29 @@
 import random
 from abc import ABC, abstractmethod
-from math import gcd
+from math import gcd, sqrt
 
 import prompt
 
 from .cli import welcome_user
+
+
+def is_prime(n):
+    """
+    Checks if an integer 'n' is a prime number.
+    """
+    if n <= 1:
+        return False
+    if n == 2:
+        return True
+    if n % 2 == 0:
+        return False
+    
+    limit = int(sqrt(n)) + 1
+    for i in range(3, limit, 2):
+        if n % i == 0:
+            return False
+            
+    return True
 
 
 class BaseGame(ABC):
@@ -113,3 +132,17 @@ class ProgGame(BaseGame):
             else:
                 prog_list.append(current)
         return ' '.join(str(x) for x in prog_list)
+
+
+class PrimeGame(BaseGame):
+    """
+    Answer "yes" if given number is prime. Otherwise answer "no".
+    """
+
+    def __init__(self):
+        super().__init__()
+
+    def get_riddle(self):
+        number = random.randint(0, 100)
+        self.correct = 'yes' if is_prime(number) else 'no'
+        return f'{number}'
